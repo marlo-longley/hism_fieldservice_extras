@@ -1,6 +1,7 @@
 # Human-ISM Fieldservice Extras
 
-This is an Odoo 12 custom module that essentially extends `fieldservice_activity`. It generates reports based on activity and location, modifies some field names, and adds a custom field for recording numeric test results.
+This is an Odoo 12 custom module that essentially extends `fieldservice_activity`. It is based off the `odoo scaffold` command for creating custom modules.
+It generates reports based on activity and location, modifies some field names, and adds a custom field for recording numeric test results.
 
  Odoo module dependencies - make sure they're installed: \
 	- `fieldservice` \
