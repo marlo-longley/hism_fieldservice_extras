@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="hism_order_form_inherit" model="ir.ui.view">
+			<field name="name">hism.order.form.activity</field>
+			<field name="model">fsm.order</field>
+			<field name="inherit_id" ref="fieldservice.fsm_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[2]" position="replace">
+					<page string="Tasks" name="Tasks">
+						<field name="order_activity_ids" nolabel="1">
+							<tree editable="bottom">
+								<field name="sequence" widget="handle"/>
+								<field name="name"/>
+								<field name="required"/>
+								<field name="ref"/>
+								<field name="result"/>
+								<field name="completed" invisible="1"/>
+								<field name="completed_on"/>
+								<field name="completed_by"/>
+								<button name="action_done" string="Complete" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['todo'])]}"/>
+								<button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', ['todo'])]}"/>
+								<field name="state" readonly="1"/>
+							</tree>
+						</field>
+					</page>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
