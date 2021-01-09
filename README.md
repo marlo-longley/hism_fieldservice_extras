@@ -27,8 +27,10 @@ It generates reports based on activity and location, modifies some field names, 
 ### Reporting
 
 - Go to **Field Service > Reporting > Tasks**
-- View excludes tasks that aren't `status = done`
+- View excludes tasks that aren't `status = done` - make sure to mark the tasks as Complete in the order!
 - Can use built-in Odoo filters and date range selects
+
+
 
 # Development
 
