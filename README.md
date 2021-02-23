@@ -7,6 +7,13 @@ It generates reports based on activity and location, modifies some field names, 
 	- `fieldservice` \
 	- `fieldservice_activity`
 
+You have to extract those modules from their parent folder on Gitub here: \
+https://github.com/OCA/field-service
+
+The `fieldservice` module itslef depends on `web_timeline` and `partner_fax` modules: \
+https://apps.odoo.com/apps/modules/12.0/partner_fax/
+https://apps.odoo.com/apps/modules/12.0/web_timeline/
+
 # Setup
 
 ## Install
@@ -42,3 +49,4 @@ For Docker, assuming your files are in `/addons` locally :
 4.  `docker run -v /addons:/var/lib/odoo/addons/12.0 -p 8069:8069 --name odoo --link db:db -t odoo:12.0`
 5. To look around container: `docker exec -it odoo bin/sh `
 6. On first run, you'll get an Odoo configuration screen. If using the above commands, enter Database Name option as `db`. The other options like Email and Password you can create arbitrarily. Use Demo Data if you don't plan on importing anything.
+7. If this module isn't showing up in Apps, enter Development Mode, and hit "Update Apps List".
