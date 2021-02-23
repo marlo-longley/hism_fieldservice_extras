@@ -41,3 +41,4 @@ For Docker, assuming your files are in `/addons` locally :
 3. `docker run -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:10`
 4.  `docker run -v /addons:/var/lib/odoo/addons/12.0 -p 8069:8069 --name odoo --link db:db -t odoo:12.0`
 5. To look around container: `docker exec -it odoo bin/sh `
+6. On first run, you'll get an Odoo configuration screen. If using the above commands, enter Database Name option as `db`. The other options like Email and Password you can create arbitrarily. Use Demo Data if you don't plan on importing anything.
