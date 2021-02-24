@@ -56,6 +56,11 @@ If you get this error after restarting dev server with changes:
 `web.assets_backend.js:3 Uncaught TypeError: odoo.define is not a function` \
 You can execute this sql command to fix: \
 `DELETE FROM ir_attachment WHERE url LIKE '/web/content/%';` \
-See https://github.com/odoo/odoo/issues/13808
-
+I used pgAdmin docker image to do this: 
 ```
+docker run -p 80:80 \
+    -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' \
+    -d dpage/pgadmin4
+```
+Then, use the the docker run command aboce to find db credentials.
