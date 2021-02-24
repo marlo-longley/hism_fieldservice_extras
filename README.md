@@ -50,3 +50,12 @@ For Docker, assuming your files are in `/addons` locally :
 5. To look around container: `docker exec -it odoo bin/sh `
 6. On first run, you'll get an Odoo configuration screen. If using the above commands, enter Database Name option as `db`. The other options like Email and Password you can create arbitrarily. Use Demo Data if you don't plan on importing anything.
 7. If this module isn't showing up in Apps, enter Development Mode, and hit "Update Apps List".
+
+GOTCHA/Weird Stuff:
+If you get this error after restarting dev server with changes:
+`web.assets_backend.js:3 Uncaught TypeError: odoo.define is not a function` \
+You can execute this sql command to fix: \
+`DELETE FROM ir_attachment WHERE url LIKE '/web/content/%';` \
+See https://github.com/odoo/odoo/issues/13808
+
+```
