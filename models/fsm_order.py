@@ -7,6 +7,19 @@ class HISMFieldserviceOrder(models.Model):
     # Fix spelling in inherited model from "Activites" to "Activities"
     order_activity_ids = fields.One2many('fsm.activity', 'fsm_order_id',
                                          'Activities')
+    def get_activity_data(self):
+        if self.order_activity_ids:
+            activity_list = []
+            for activity in self.order_activity_ids:
+                activity_list.append({'name': activity.name,
+                                      'required': activity.required,
+                                      'completed_on': activity.completed_on,
+                                      'score': activity.score,
+                                      'after': activity.after,
+                                      'ref': activity.ref,
+                                      'notes': activity.notes,
+                                      'state': activity.state})
+            return activity_list
 
     @api.onchange('template_id')
     # Need to avoid calling parent fieldservice_activity/fsm_order.py because it contains a bug https://github.com/OCA/field-service/issues/509
@@ -28,3 +41,5 @@ class HISMFieldserviceOrder(models.Model):
                 self.type = self.template_id.type_id
             if self.template_id.team_id:
                 self.team_id = self.template_id.team_id
+
+

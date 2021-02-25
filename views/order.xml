@@ -13,8 +13,10 @@
 								<field name="sequence" widget="handle"/>
 								<field name="name"/>
 								<field name="required"/>
+								<field name="after"/>
 								<field name="ref"/>
-								<field name="result"/>
+								<field name="score"/>
+								<field name="notes"/>
 								<field name="completed" invisible="1"/>
 								<field name="completed_on"/>
 								<field name="completed_by"/>

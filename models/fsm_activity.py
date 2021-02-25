@@ -23,7 +23,12 @@ class HISMFieldserviceActivity(models.Model):
                               readonly=True,
                               states={'todo': [('readonly', False)]})
 
-    # Optional field to store numeric test results. Can be used as filter in reports.
-    result = fields.Float('Result/Score')
+    # Optional field to store notes.
+    notes = fields.Char(type='Text')
 
+    # Was the activity completed after the service?
+    after = fields.Boolean('After', default=False)
+
+    # Optional field to store numeric test results. Can be used as filter in reports.
+    score = fields.Float('Score')
 
