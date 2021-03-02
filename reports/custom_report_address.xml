@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <template id="custom_report_address" inherit_id="web.address_layout">
+            <xpath expr="//div[hasclass('address', 'row')]" position="replace">
+                <div class="address row">
+                    <div class="col-6">
+                        <span t-esc="o.company_id.name"/><br/>
+                        <span t-esc="o.company_id.street"/><br/>
+                        <span t-esc="o.company_id.city"/>,&#160; <span t-esc="o.company_id.state_id.name"/>&#160;<span t-esc="o.company_id.zip"/><br/>
+                        <span t-esc="o.company_id.phone"/><br/>
+                        <span t-esc="o.company_id.email"/><br/>
+                    </div>
+                    <div name="address" class="col-6">
+                        <h4 class="client-address">Client:</h4>
+                        <t t-raw="address"/>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

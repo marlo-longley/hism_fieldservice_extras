@@ -52,15 +52,25 @@ For Docker, assuming your files are in `/addons` locally :
 7. If this module isn't showing up in Apps, enter Development Mode, and hit "Update Apps List".
 
 GOTCHA/Weird Stuff:
+1. `odoo.define is not a function` ERROR:
 If you get this error after restarting dev server with changes:
 `web.assets_backend.js:3 Uncaught TypeError: odoo.define is not a function` \
-You can execute this sql command to fix: \
+You can execute these sql commands to fix: \
 `DELETE FROM ir_attachment WHERE url LIKE '/web/content/%';` \
+   `DELETE FROM ir_attachment WHERE datas_fname SIMILAR TO '%.(js|css)';`
 I used pgAdmin docker image to do this: 
-```
-docker run -p 80:80 \
-    -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' \
-    -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' \
-    -d dpage/pgadmin4
-```
-Then, use the the docker run command aboce to find db credentials.
+	```
+	docker run -p 80:80 \
+		-e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' \
+		-e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' \
+		-d dpage/pgadmin4
+	```
+	Then, use the docker run command above to find db credentials.
+
+  
+2. Custom PDF report styles. 
+	- Bootstrap and other styles will not show up on custom PDF reports unless 
+https://github.com/odoo/odoo/wiki/Wkhtmltopdf is installed. There are versioning issues to pay attention to the wiki pasted here to select version.
+  Using the Docker image like shown above makes sure it's pre-installed, otherwise you'll have to DIY.
+	- For the styles to work in PDF, you must place content within a `<div class="page">`
+	- Also see https://stackoverflow.com/questions/47055149/why-my-pdf-report-is-not-taking-the-css-styles-well-in-odoo

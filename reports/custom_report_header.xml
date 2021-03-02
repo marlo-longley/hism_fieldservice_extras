@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="external_layout_header" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@class='header']" position="replace">
+<!--            This replace with nothing is a workaround approach to removing the company title from the header section.-->
+<!--            It's manually added in later to the custom_report_address tamplate so that the layout can be more controlled-->
+<!--            and the client and company address can be in the same row.-->
+            <div style="height:0px;width:0px"></div>
+        </xpath>
+    </template>
+</odoo>
