@@ -3,10 +3,12 @@
     <!-- Inherit service order report (from module fieldservice) -->
     <template id="hism_service_order_report" inherit_id="fieldservice.report_fsm_order_document">
         <!-- Hook into the parent form's page element and replace it-->
-        <xpath expr="//div[@class='page']" position="replace">
+        <xpath expr="//div[@class='page']" position="replace" style="position:absolute; top:0px;">
+
+            <t t-set="data_report_margin_top" t-value="1"/>
+
             <div class="page">
                 <div class="oe_structure"/>
-                <hr/>
                 <h2>
                     FS Order #
                     <span t-field="doc.name"/>
@@ -27,18 +29,28 @@
                     </div>
                 </div>
                 <hr/>
-                <div t-if="doc.description" id="description">
-                    <h3>Description</h3>
-                    <p t-field="doc.description"/>
-                </div>
+                <div class="row">
+                    <div class="col-6">
+<!--                    <div t-if="doc.todo" id="instruction">-->
+                        <div>
+                            <h3>Instructions</h3>
+                            <p t-raw="doc.todo"/>
+                        </div>
+                    </div>
+                    <div class="col-6" >
+<!--                     <div t-if="doc.description" id="description">-->
+                    <div style="height:200px;">
+                        <h3>Description:</h3>
+                        <p t-field="doc.description"/>
+                    </div>
 
-                <div t-if="doc.todo" id="instruction">
-                    <h3>Instructions</h3>
-                    <p t-raw="doc.todo"/>
-                </div>
-                <div t-if="doc.resolution" id="resolution">
-                    <h3>Resolution Notes</h3>
-                    <p t-field="doc.resolution"/>
+<!--                    <div t-if="doc.resolution" id="resolution">-->
+                    <div style="height:200px;">
+                        <h3>Resolution:</h3>
+                        <p t-field="doc.resolution"/>
+                    </div>
+                    </div>
+
                 </div>
                 <!-- Table showing tasks and results -->
                 <div t-if="doc.order_activity_ids" id="activities">
@@ -47,7 +59,7 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Test Name</th>
-                                <th scope="col">Tested After Service?</th>
+                                <th scope="col">After Service?</th>
                                 <th scope="col">Completed On</th>
                                 <th scope="col">Score</th>
                                 <th scope="col">Notes</th>
@@ -58,6 +70,7 @@
                             <t t-foreach="activity_data" t-as="task">
                                 <tr>
                                     <td>
+                                        TODO: cut off after character limit to keep table row thin
                                         <t t-esc="task['name']"/>
                                     </td>
                                     <td>
@@ -83,6 +96,7 @@
                 <div class="oe_structure"/>
             </div>
         </xpath>
+<!--        </t>-->
     </template>
 </odoo>
 

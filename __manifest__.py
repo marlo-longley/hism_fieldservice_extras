@@ -23,6 +23,8 @@
         'views/order.xml',
         'views/report.xml',
         'views/template.xml',
-        'reports/service_order.xml',
+        'reports/custom_service_order_report.xml',
+        'reports/custom_report_header.xml',
+        'reports/custom_report_address.xml',
     ],
 }
