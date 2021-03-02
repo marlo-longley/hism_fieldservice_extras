@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <template id="custom_address_layout" inherit_id="web.address_layout">
+        <template id="custom_report_address" inherit_id="web.address_layout">
             <xpath expr="//div[hasclass('address', 'row')]" position="replace">
                 <div class="address row">
                     <div class="col-6">

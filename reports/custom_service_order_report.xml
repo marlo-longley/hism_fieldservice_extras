@@ -1,28 +1,62 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
-    <!-- Inherit service order report (from module fieldservice) -->
-    <template id="hism_service_order_report" inherit_id="fieldservice.report_fsm_order_document">
-        <!-- Hook into the parent form's page element and replace it-->
-        <xpath expr="//div[@class='page']" position="replace" style="position:absolute; top:0px;">
-
-            <t t-set="data_report_margin_top" t-value="1"/>
-
-            <div class="page">
-                <div class="oe_structure"/>
-                <h2>
+    <record id="paperformat_no_top_margin"
+        model="report.paperformat">
+      <field name="name">US Letter</field>
+      <field name="default" eval="True" />
+      <field name="format">A4</field>
+      <field name="margin_top">5</field>
+      <field name="margin_bottom">1</field>
+      <field name="margin_left">5</field>
+      <field name="margin_right">5</field>
+      <field name="orientation">Portrait</field>
+    </record>
+     <report
+        id="custom_service_order_report"
+        string="Custom Field Service"
+        menu="True"
+        name="hism_fieldservice_extras.custom_service_order_report_template"
+        report_type="qweb-pdf"
+        model="fsm.order"
+        paperformat="paperformat_no_top_margin"
+        >
+     </report>
+    <template id="custom_service_order_report_template">
+    <t t-call="web.basic_layout">
+           <t t-foreach="docs" t-as="doc">
+               <div class="page">
+                   <div class="row">
+<!--                       The company's address-->
+                       <div class="col-6">
+                            <span t-esc="doc.company_id.name"/><br/>
+                            <span t-esc="doc.company_id.street"/>
+                            <span t-esc="doc.company_id.street2"/><br/>
+                            <span t-esc="doc.company_id.city"/>,
+                            <span t-esc="doc.company_id.state_id.name"/>
+                            <span t-esc="doc.company_id.zip"/><br/>
+                            <span t-esc="doc.company_id.phone"/><br/>
+                            <span t-esc="doc.company_id.email"/><br/>
+                       </div>
+<!--                       The client/service location address-->
+                       <div class="col-6">
+                            <h4 class="client-address">Service Location:</h4>
+                            <span t-esc="doc.street"/><br/>
+                            <span t-esc="doc.street2"/><br/>
+                            <span t-esc="doc.city"/>,
+                            <span t-esc="doc.state_name"/>
+                            <span t-esc="doc.company_id.zip"/><br/>
+                            <span t-esc="doc.phone"/><br/>
+                        </div>
+                   </div>
+                    <h4>
                     FS Order #
                     <span t-field="doc.name"/>
                     <t t-if="doc.template_id">(<span t-field="doc.template_id.name"/>)
                     </t>
-                </h2>
+                </h4>
                 <div>
-                    <t t-if="doc.stage_id.name == 'Scheduled'">
-                        <div t-if="doc.stage_id">
-                            <strong>ETA:</strong>
-                            <span t-field="doc.scheduled_date_start"
-                                  t-options="{'widget': 'datetime', 'tz': doc.location_id.tz}"/>
-                        </div>
-                    </t>
+                    <strong>Scheduled Start Date:</strong>
+                    <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"></span>
                     <div t-if="doc.person_id">
                         <strong>Assigned To:</strong>
                         <span t-field="doc.person_id"/>
@@ -31,28 +65,24 @@
                 <hr/>
                 <div class="row">
                     <div class="col-6">
-<!--                    <div t-if="doc.todo" id="instruction">-->
                         <div>
                             <h3>Instructions</h3>
                             <p t-raw="doc.todo"/>
                         </div>
                     </div>
                     <div class="col-6" >
-<!--                     <div t-if="doc.description" id="description">-->
-                    <div style="height:200px;">
-                        <h3>Description:</h3>
-                        <p t-field="doc.description"/>
-                    </div>
-
-<!--                    <div t-if="doc.resolution" id="resolution">-->
-                    <div style="height:200px;">
-                        <h3>Resolution:</h3>
-                        <p t-field="doc.resolution"/>
-                    </div>
+                        <div style="height:200px;">
+                            <h3>Description:</h3>
+                            <p t-field="doc.description"/>
+                        </div>
+                        <div style="height:200px;">
+                            <h3>Resolution:</h3>
+                            <p t-field="doc.resolution"/>
+                        </div>
                     </div>
 
                 </div>
-                <!-- Table showing tasks and results -->
+                <!-- Table showing tasks with space for written results -->
                 <div t-if="doc.order_activity_ids" id="activities">
                     <t t-set="activity_data" t-value="doc.get_activity_data()"/>
                     <table class="table">
@@ -65,38 +95,36 @@
                                 <th scope="col">Notes</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             <t t-foreach="activity_data" t-as="task">
-                                <tr>
+                                <tr style="min-height:80px">
                                     <td>
-                                        TODO: cut off after character limit to keep table row thin
                                         <t t-esc="task['name']"/>
                                     </td>
+<!--                                    Actual values are commented out so that field agent can fill in by hand-->
                                     <td>
-                                        <p t-if="task['after']">True</p>
-                                        <p t-else="">False</p>
+<!--                                        <p t-if="task['after']">True</p>-->
+<!--                                        <p t-else="">False</p>-->
                                     </td>
                                     <td>
-                                        <t t-esc="task['completed_on']"/>
+<!--                                        <t t-esc="task['completed_on']" options="{'format': 'DD/MM/YYYY'}"/>-->
                                     </td>
                                     <td>
-                                        <p t-if="(task['score'] != 0.00)"><t t-esc="task['score']"/></p>
-                                        <p t-else="">N/A</p>
+<!--                                        Only show score if it is not 0-->
+<!--                                        <p t-if="(task['score'] != 0.00)"><t t-esc="task['score']"/></p>-->
+<!--                                        <p t-else="">N/A</p>-->
                                     </td>
                                     <td>
-                                        <t t-esc="task['notes']"/>
+<!--                                        <t t-esc="task['notes']"/>-->
                                     </td>
                                 </tr>
                             </t>
                         </tbody>
                     </table>
                 </div>
-
-                <div class="oe_structure"/>
-            </div>
-        </xpath>
+                </div>
+            </t>
 <!--        </t>-->
-    </template>
+    </t>
+</template>
 </odoo>
-
