@@ -13,7 +13,7 @@
     </record>
      <report
         id="custom_service_order_report"
-        string="Custom Field Service"
+        string="Field Work Order Form"
         menu="True"
         name="hism_fieldservice_extras.custom_service_order_report_template"
         report_type="qweb-pdf"
