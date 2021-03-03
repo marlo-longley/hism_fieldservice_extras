@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- stage_id = 2 filters for completed orders -->
+
+    <record id="search_location_history" model="ir.ui.view">
+        <field name="model">fsm.order</field>
+        <field name="arch" type="xml">
+            <search string="DMR">
+                <filter name="group_location" string="Location" context="{'group_by':'location_id'}"/>
+            </search>
+        </field>
+    </record>
+
+<!--    <act_window-->
+<!--        id="action_location_history"-->
+<!--        name="Location History"-->
+<!--        res_model="fsm.order"-->
+<!--        view_mode="tree,form"-->
+<!--        domain="[('stage_id', '=', 2)]"-->
+<!--        />-->
+
+    <record id='action_location_history' model='ir.actions.act_window'>
+        <field name="name">Location History</field>
+        <field name="res_model">fsm.order</field>
+        <field name="view_mode">tree,form</field>
+<!--        <field name="domain">[('stage_id', '=', 2)]</field>-->
+<!--        Adds Search View-->
+        <field name="search_view_id" ref="search_location_history"/>
+<!--        Makes Group By location the default in Search View-->
+        <field name="context">{'group_by':'location_id'}</field>
+        <field name="Location" />
+    </record>
+    <menuitem name="Location History"
+              parent="fieldservice.reporting"
+              action="action_location_history"
+              sequence="1"
+              id="menu_location_history"/>
+</odoo>

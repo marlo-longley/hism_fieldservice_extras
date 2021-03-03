@@ -50,6 +50,8 @@ For Docker, assuming your files are in `/addons` locally :
 5. To look around container: `docker exec -it odoo bin/sh `
 6. On first run, you'll get an Odoo configuration screen. If using the above commands, enter Database Name option as `db`. The other options like Email and Password you can create arbitrarily. Use Demo Data if you don't plan on importing anything.
 7. If this module isn't showing up in Apps, enter Development Mode, and hit "Update Apps List".
+8. Faster for development: to update the module from the command line using odoo CLI (once inside the container):
+`odoo -d db -u hism_fieldservice_extras --db_host db --db_password odoo --no-http`
 
 GOTCHA/Weird Stuff:
 1. `odoo.define is not a function` ERROR:

@@ -22,6 +22,7 @@
     'data': [
         'views/order.xml',
         'views/report.xml',
+        'views/location_history_list_view.xml',
         'views/template.xml',
         'reports/custom_service_order_report.xml',
         'reports/custom_report_header.xml',
