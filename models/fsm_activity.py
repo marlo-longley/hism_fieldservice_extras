@@ -30,5 +30,6 @@ class HISMFieldserviceActivity(models.Model):
     after = fields.Boolean('After', default=False)
 
     # Optional field to store numeric test results. Can be used as filter in reports.
-    score = fields.Float('Score')
+    # group_operator=False means that the values won't be summed together in a grouped view.
+    score = fields.Float('Score', group_operator=False)
 
