@@ -22,11 +22,12 @@
         >
      </report>
     <template id="custom_service_order_report_template">
+<!--        TODO: extract inline styles-->
     <t t-call="web.basic_layout">
            <t t-foreach="docs" t-as="doc">
                <div class="page">
                    <div class="row">
-<!--                       The company's address-->
+<!--                       The company's address and Order Info-->
                        <div class="col-6">
                             <span t-esc="doc.company_id.name"/><br/>
                             <span t-esc="doc.company_id.street"/>
@@ -36,24 +37,12 @@
                             <span t-esc="doc.company_id.zip"/><br/>
                             <span t-esc="doc.company_id.phone"/><br/>
                             <span t-esc="doc.company_id.email"/><br/>
-                       </div>
-<!--                       The client/service location address-->
-                       <div class="col-6">
-                            <h4 class="client-address">Service Location:</h4>
-                            <span t-esc="doc.street"/><br/>
-                            <span t-esc="doc.street2"/><br/>
-                            <span t-esc="doc.city"/>,
-                            <span t-esc="doc.state_name"/>
-                            <span t-esc="doc.company_id.zip"/><br/>
-                            <span t-esc="doc.phone"/><br/>
-                        </div>
-                   </div>
-                    <h4>
-                    FS Order #
-                    <span t-field="doc.name"/>
-                    <t t-if="doc.template_id">(<span t-field="doc.template_id.name"/>)
-                    </t>
-                </h4>
+                           <p style="padding-top:5px">
+                                <strong>FS Order #</strong>
+                                <span t-field="doc.name"/>
+                                <t t-if="doc.template_id">(<span t-field="doc.template_id.name"/>)
+                                </t>
+                           </p>
                 <div>
                     <strong>Scheduled Start Date:</strong>
                     <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"></span>
@@ -62,37 +51,118 @@
                         <span t-field="doc.person_id"/>
                     </div>
                 </div>
+                       </div>
+<!--                       The client/service location address-->
+                       <div class="col-6">
+                           <span class="client-address"><strong>Service Location:</strong></span><br/>
+                            <span t-esc="doc.street"/><br/>
+                            <span t-esc="doc.street2"/><br/>
+                            <span t-esc="doc.city"/>,
+                            <span t-esc="doc.state_name"/>
+                            <span t-esc="doc.company_id.zip"/><br/>
+                            <span t-esc="doc.phone"/><br/>
+                           <div>
+                                <p style="padding-top:5px"><strong>Instructions:</strong></p>
+                                <p t-raw="doc.todo"/>
+                            </div>
+                        </div>
+                   </div>
                 <hr/>
                 <div class="row">
                     <div class="col-6">
-                        <div>
-                            <h3>Instructions</h3>
-                            <p t-raw="doc.todo"/>
+                        <div style="height:100px;">
+                            <p><strong>Description:</strong></p>
+                            <p t-field="doc.description"/>
                         </div>
                     </div>
                     <div class="col-6" >
-                        <div style="height:200px;">
-                            <h3>Description:</h3>
-                            <p t-field="doc.description"/>
-                        </div>
-                        <div style="height:200px;">
-                            <h3>Resolution:</h3>
+                        <div style="height:100px;">
+                            <p><strong>Resolution:</strong></p>
                             <p t-field="doc.resolution"/>
                         </div>
                     </div>
 
                 </div>
+                <!-- Table for product types and subtypes    -->
+               <table class="table">
+                   <thead class="thead-dark">
+                       <tr>
+                           <th scope="col" style="padding:0px">Service Performed</th>
+                           <th scope="col" style="padding:0px">Description</th>
+                           <th scope="col" style="padding:0px">Date/Time</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                       </tr>
+                   </tbody>
+               </table>
+
+               <!-- Table for product types and subtypes    -->
+               <table class="table">
+                   <thead class="thead-dark">
+                       <tr>
+                           <th scope="col" style="padding:0px">Product Type</th>
+                           <th scope="col" style="padding:0px">Subtype</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                       </tr>
+                      <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                       </tr>
+                       <tr style="height:35px">
+                           <td></td>
+                           <td></td>
+                       </tr>
+                   </tbody>
+               </table>
                 <!-- Table showing tasks with space for written results -->
                 <div t-if="doc.order_activity_ids" id="activities">
                     <t t-set="activity_data" t-value="doc.get_activity_data()"/>
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col">Test Name</th>
-                                <th scope="col">After Service?</th>
-                                <th scope="col">Completed On</th>
-                                <th scope="col">Score</th>
-                                <th scope="col">Notes</th>
+                                <th scope="col" style="padding:0px">Test Name</th>
+                                <th scope="col" style="padding:0px">After Service?</th>
+                                <th scope="col" style="padding:0px">Completed On</th>
+                                <th scope="col" style="padding:0px">Score</th>
+                                <th scope="col" style="padding:0px">Notes</th>
                             </tr>
                         </thead>
                         <tbody>
