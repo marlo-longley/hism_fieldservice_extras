@@ -1,0 +1,30 @@
+.address, .address li {
+    list-style: none;
+    padding-left: 0;
+}
+
+.order-info {
+    padding-top: 5px;
+}
+
+p#instructions {
+    padding-top: 5px;
+}
+
+.note-block {
+    height: 100px;
+}
+.table {
+    margin-bottom: 0;
+}
+.table th {
+    padding: 0 0 0 5px;
+}
+
+tbody tr {
+    height: 35px;
+}
+
+#activities tbody tr {
+    min-height: 80px;
+}

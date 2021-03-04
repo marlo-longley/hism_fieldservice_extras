@@ -1,200 +1,253 @@
 <?xml version="1.0" ?>
 <odoo>
+    <!-- Paperformat is how to set overall margins and orientation on a printed report -->
     <record id="paperformat_no_top_margin"
-        model="report.paperformat">
-      <field name="name">US Letter</field>
-      <field name="default" eval="True" />
-      <field name="format">A4</field>
-      <field name="margin_top">5</field>
-      <field name="margin_bottom">1</field>
-      <field name="margin_left">5</field>
-      <field name="margin_right">5</field>
-      <field name="orientation">Portrait</field>
+            model="report.paperformat">
+        <field name="name">US Letter</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">1</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="orientation">Portrait</field>
     </record>
-     <report
-        id="custom_service_order_report"
-        string="Field Work Order Form"
-        menu="True"
-        name="hism_fieldservice_extras.custom_service_order_report_template"
-        report_type="qweb-pdf"
-        model="fsm.order"
-        paperformat="paperformat_no_top_margin"
-        >
-     </report>
+
+    <!-- Specify report elements-->
+    <report
+            id="custom_service_order_report"
+            string="Field Work Order Form"
+            menu="True"
+            name="hism_fieldservice_extras.custom_service_order_report_template"
+            report_type="qweb-pdf"
+            model="fsm.order"
+            paperformat="paperformat_no_top_margin"
+    >
+    </report>
+
+    <!--    Link to custom stylesheet for this report -->
+    <template id="custom_service_order_report_styles" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link href="/hism_fieldservice_extras/static/css/custom_report.css" rel="stylesheet" type="text/scss"/>
+        </xpath>
+    </template>
+
+    <!-- Report template-->
     <template id="custom_service_order_report_template">
-<!--        TODO: extract inline styles-->
-    <t t-call="web.basic_layout">
-           <t t-foreach="docs" t-as="doc">
-               <div class="page">
-                   <div class="row">
-<!--                       The company's address and Order Info-->
-                       <div class="col-6">
-                            <span t-esc="doc.company_id.name"/><br/>
-                            <span t-esc="doc.company_id.street"/>
-                            <span t-esc="doc.company_id.street2"/><br/>
-                            <span t-esc="doc.company_id.city"/>,
-                            <span t-esc="doc.company_id.state_id.name"/>
-                            <span t-esc="doc.company_id.zip"/><br/>
-                            <span t-esc="doc.company_id.phone"/><br/>
-                            <span t-esc="doc.company_id.email"/><br/>
-                           <p style="padding-top:5px">
+        <!-- Must use web.basic_layout for correct Bootstrap styles to render in PDF version-->
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <!-- All content must be put inside "page" class div-->
+                <div class="page">
+                    <div class="row">
+                        <!-- The company's address and Order Info-->
+                        <div class="col-6">
+                            <ul class="address">
+                                <li>
+                                    <span t-esc="doc.company_id.name"/>
+                                </li>
+                                <li>
+                                    <span t-esc="doc.company_id.street"/>
+                                </li>
+                                <li>
+                                    <span t-esc="doc.company_id.street2"/>
+                                </li>
+                                <li>
+                                    <span t-esc="doc.company_id.city"/>,
+                                    <span t-esc="doc.company_id.state_id.name"/>
+                                    <span t-esc="doc.company_id.zip"/>
+                                </li>
+                                <li>
+                                    <span t-esc="doc.company_id.phone"/>
+                                </li>
+                                <li>
+                                    <span t-esc="doc.company_id.email"/>
+                                </li>
+                            </ul>
+                            <p class="order-info">
                                 <strong>FS Order #</strong>
                                 <span t-field="doc.name"/>
                                 <t t-if="doc.template_id">(<span t-field="doc.template_id.name"/>)
                                 </t>
-                           </p>
-                <div>
-                    <strong>Scheduled Start Date:</strong>
-                    <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"></span>
-                    <div t-if="doc.person_id">
-                        <strong>Assigned To:</strong>
-                        <span t-field="doc.person_id"/>
+                            </p>
+                            <p>
+                                <strong>Scheduled Start Date:</strong>
+                                <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"></span>
+                            </p>
+                            <p t-if="doc.person_id">
+                                <strong>Assigned To:</strong>
+                                <span t-field="doc.person_id"/>
+                            </p>
+                        </div>
+                        <!-- The client/service location address-->
+                        <div class="col-6">
+                            <ul class="address">
+                                <strong>Service Location:</strong>
+                                <t t-if="doc.street">
+                                    <li>
+                                        <span t-esc="doc.street"/>
+                                    </li>
+                                </t>
+                                <t t-if="doc.street2">
+                                    <li>
+                                        <span t-esc="doc.street2"/>
+                                    </li>
+                                </t>
+                                <li>
+                                    <t t-if="doc.city">
+                                        <span t-esc="doc.city"/>,
+                                    </t>
+                                    <t t-if="doc.state_name">
+                                        <span t-esc="doc.state_name"/>
+                                    </t>
+                                    <t t-if="doc.zip">
+                                        <span t-esc="doc.zip"/>
+                                    </t>
+                                </li>
+                                <t t-if="doc.phone">
+                                    <li>
+                                        <span t-esc="doc.phone"/>
+                                    </li>
+                                </t>
+                            </ul>
+                            <p id="instructions">
+                                <strong>Instructions:</strong>
+                            </p>
+                            <p t-raw="doc.todo"/>
+                        </div>
                     </div>
-                </div>
-                       </div>
-<!--                       The client/service location address-->
-                       <div class="col-6">
-                           <span class="client-address"><strong>Service Location:</strong></span><br/>
-                            <span t-esc="doc.street"/><br/>
-                            <span t-esc="doc.street2"/><br/>
-                            <span t-esc="doc.city"/>,
-                            <span t-esc="doc.state_name"/>
-                            <span t-esc="doc.company_id.zip"/><br/>
-                            <span t-esc="doc.phone"/><br/>
-                           <div>
-                                <p style="padding-top:5px"><strong>Instructions:</strong></p>
-                                <p t-raw="doc.todo"/>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="note-block">
+                                <p>
+                                    <strong>Description:</strong>
+                                </p>
+                                <p t-field="doc.description"/>
                             </div>
                         </div>
-                   </div>
-                <hr/>
-                <div class="row">
-                    <div class="col-6">
-                        <div style="height:100px;">
-                            <p><strong>Description:</strong></p>
-                            <p t-field="doc.description"/>
+                        <div class="col-6">
+                            <div class="note-block">
+                                <p>
+                                    <strong>Resolution:</strong>
+                                </p>
+                                <p t-field="doc.resolution"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6" >
-                        <div style="height:100px;">
-                            <p><strong>Resolution:</strong></p>
-                            <p t-field="doc.resolution"/>
-                        </div>
-                    </div>
 
-                </div>
-                <!-- Table for product types and subtypes    -->
-               <table class="table">
-                   <thead class="thead-dark">
-                       <tr>
-                           <th scope="col" style="padding:0px">Service Performed</th>
-                           <th scope="col" style="padding:0px">Description</th>
-                           <th scope="col" style="padding:0px">Date/Time</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                           <td></td>
-                       </tr>
-                   </tbody>
-               </table>
-
-               <!-- Table for product types and subtypes    -->
-               <table class="table">
-                   <thead class="thead-dark">
-                       <tr>
-                           <th scope="col" style="padding:0px">Product Type</th>
-                           <th scope="col" style="padding:0px">Subtype</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                       </tr>
-                      <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                       </tr>
-                       <tr style="height:35px">
-                           <td></td>
-                           <td></td>
-                       </tr>
-                   </tbody>
-               </table>
-                <!-- Table showing tasks with space for written results -->
-                <div t-if="doc.order_activity_ids" id="activities">
-                    <t t-set="activity_data" t-value="doc.get_activity_data()"/>
+                    </div>
+                    <!-- Table for product types and subtypes-->
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col" style="padding:0px">Test Name</th>
-                                <th scope="col" style="padding:0px">After Service?</th>
-                                <th scope="col" style="padding:0px">Completed On</th>
-                                <th scope="col" style="padding:0px">Score</th>
-                                <th scope="col" style="padding:0px">Notes</th>
+                                <th scope="col">Service Performed</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Date/Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="activity_data" t-as="task">
-                                <tr style="min-height:80px">
-                                    <td>
-                                        <t t-esc="task['name']"/>
-                                    </td>
-<!--                                    Actual values are commented out so that field agent can fill in by hand-->
-                                    <td>
-<!--                                        <p t-if="task['after']">True</p>-->
-<!--                                        <p t-else="">False</p>-->
-                                    </td>
-                                    <td>
-<!--                                        <t t-esc="task['completed_on']" options="{'format': 'DD/MM/YYYY'}"/>-->
-                                    </td>
-                                    <td>
-<!--                                        Only show score if it is not 0-->
-<!--                                        <p t-if="(task['score'] != 0.00)"><t t-esc="task['score']"/></p>-->
-<!--                                        <p t-else="">N/A</p>-->
-                                    </td>
-                                    <td>
-<!--                                        <t t-esc="task['notes']"/>-->
-                                    </td>
-                                </tr>
-                            </t>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
-                </div>
+
+                    <!-- Table for product types and subtypes-->
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Product Type</th>
+                                <th scope="col">Subtype</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Table showing tasks with space for written results -->
+                    <div t-if="doc.order_activity_ids" id="activities">
+                        <t t-set="activity_data" t-value="doc.get_activity_data()"/>
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Test Name</th>
+                                    <th scope="col">After Service?</th>
+                                    <th scope="col">Completed On</th>
+                                    <th scope="col">Score</th>
+                                    <th scope="col">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="activity_data" t-as="task">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="task['name']"/>
+                                        </td>
+                                        <!--Actual values are commented out so that field agent can fill in by hand-->
+                                        <!--TODO: move this logic in case needed in another report-->
+                                        <td>
+                                            <!--<p t-if="task['after']">True</p>-->
+                                            <!--<p t-else="">False</p>-->
+                                        </td>
+                                        <td>
+                                            <!--<t t-esc="task['completed_on']" options="{'format': 'DD/MM/YYYY'}"/>-->
+                                        </td>
+                                        <td>
+                                            <!--Only show score if it is not 0-->
+                                            <!--<p t-if="(task['score'] != 0.00)"><t t-esc="task['score']"/></p>-->
+                                            <!--<p t-else="">N/A</p>-->
+                                        </td>
+                                        <td>
+                                            <!--<t t-esc="task['notes']"/>-->
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </t>
-<!--        </t>-->
-    </t>
-</template>
+        </t>
+    </template>
 </odoo>
