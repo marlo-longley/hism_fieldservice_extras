@@ -2,9 +2,10 @@
 {
     'name': "hism_fieldservice_extras",
 
-    'summary':  "Extra functionality for the fieldservice module",
+    'summary': """
+        Module for extending the Field Service addon to suit Advanced Water Systems. """,
 
-    'description': "Extends Activities into custom Tasks; Adds reporting for Tasks."
+    'description': "Extends Activities into custom Tasks; Adds reporting for Tasks; Creates custom printed reports."
     ,
 
     'author': "Marlo Longley",
@@ -21,11 +22,12 @@
     # always loaded
     'data': [
         'views/order.xml',
-        #'views/report.xml',
         'views/location_history_list_view.xml',
         'views/template.xml',
         'reports/custom_service_order_report.xml',
         'reports/custom_report_header.xml',
         'reports/custom_report_address.xml',
+        'views/field_service_location_form.xml',
+        'views/field_service_worker_form.xml'
     ],
 }

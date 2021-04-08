@@ -41,208 +41,135 @@
                 <div class="page">
                     <div class="row">
                         <!-- The company's address and Order Info-->
+                        <!-- Left column-->
                         <div class="col-6">
-                            <ul class="address">
-                                <li>
-                                    <span t-esc="doc.company_id.name"/>
-                                </li>
-                                <li>
-                                    <span t-esc="doc.company_id.street"/>
-                                </li>
-                                <li>
-                                    <span t-esc="doc.company_id.street2"/>
-                                </li>
-                                <li>
-                                    <span t-esc="doc.company_id.city"/>,
-                                    <span t-esc="doc.company_id.state_id.name"/>
-                                    <span t-esc="doc.company_id.zip"/>
-                                </li>
-                                <li>
-                                    <span t-esc="doc.company_id.phone"/>
-                                </li>
-                                <li>
-                                    <span t-esc="doc.company_id.email"/>
-                                </li>
-                            </ul>
-                            <p class="order-info">
+                                <strong><span t-esc="doc.company_id.name"/></strong><br/>
                                 <strong>FS Order #</strong>
                                 <span t-field="doc.name"/>
                                 <t t-if="doc.template_id">(<span t-field="doc.template_id.name"/>)
-                                </t>
-                            </p>
-                            <p>
+                                </t><br/>
                                 <strong>Scheduled Start Date:</strong>
-                                <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"></span>
-                            </p>
-                            <p t-if="doc.person_id">
+                                <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"/><br/>
                                 <strong>Assigned To:</strong>
                                 <span t-field="doc.person_id"/>
-                            </p>
                         </div>
-                        <!-- The client/service location address-->
+                        <!-- Right column-->
                         <div class="col-6">
-                            <ul class="address">
-                                <strong>Service Location:</strong>
-                                <t t-if="doc.street">
-                                    <li>
-                                        <span t-esc="doc.street"/>
-                                    </li>
+                            <!-- The client/service location address-->
+                            <strong><span t-esc="doc.site_name"/></strong><br />
+                            <t t-if="doc.computed_address">
+                                <span t-esc="doc.computed_address"/>
+                            </t>
+                            <!-- Contact methods-->
+                            <strong>Contact Info:</strong><br />
+                            <ul>
+                                <!-- Call model method to get related contacts -->
+                                <!-- Only load contacts with data in the phone, email, or mobile fields -->
+                                <t t-set="related_contacts" t-value="doc.get_related_contacts()"/>
+                                <t t-foreach="related_contacts.filtered(lambda r: r.phone != False)" t-as="obj" >
+                                    <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.phone"/></li>
                                 </t>
-                                <t t-if="doc.street2">
-                                    <li>
-                                        <span t-esc="doc.street2"/>
-                                    </li>
+                                <t t-foreach="related_contacts.filtered(lambda r: r.mobile != False)" t-as="obj" >
+                                    <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.mobile"/></li>
                                 </t>
-                                <li>
-                                    <t t-if="doc.city">
-                                        <span t-esc="doc.city"/>,
-                                    </t>
-                                    <t t-if="doc.state_name">
-                                        <span t-esc="doc.state_name"/>
-                                    </t>
-                                    <t t-if="doc.zip">
-                                        <span t-esc="doc.zip"/>
-                                    </t>
-                                </li>
-                                <t t-if="doc.phone">
-                                    <li>
-                                        <span t-esc="doc.phone"/>
-                                    </li>
+                                <t t-foreach="related_contacts.filtered(lambda r: r.email != False)" t-as="obj" >
+                                    <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
                                 </t>
                             </ul>
-                            <p id="instructions">
-                                <strong>Instructions:</strong>
-                            </p>
-                            <p t-raw="doc.todo"/>
+
                         </div>
                     </div>
+                    <!-- Directions-->
+                    <strong>Directions:</strong><br />
+                    <t t-raw="doc.site_directions"/>
                     <hr/>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="note-block">
-                                <p>
-                                    <strong>Description:</strong>
-                                </p>
-                                <p t-field="doc.description"/>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="note-block">
-                                <p>
-                                    <strong>Resolution:</strong>
-                                </p>
-                                <p t-field="doc.resolution"/>
-                            </div>
-                        </div>
 
-                    </div>
-                    <!-- Table for product types and subtypes-->
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Service Performed</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Date/Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Last Service-->
+                        <strong>Last Service Date (Scheduled Start Date): &#160;</strong>
+                        <span t-if="doc.last_service_order_id"><span t-esc="doc.last_service_order_date"/></span>
+                        <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
 
-                    <!-- Table for product types and subtypes-->
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Product Type</th>
-                                <th scope="col">Subtype</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Table showing tasks with space for written results -->
-                    <div t-if="doc.order_activity_ids" id="activities">
-                        <t t-set="activity_data" t-value="doc.get_activity_data()"/>
-                        <table class="table">
+                    <t t-if="doc.last_service_order_id">
+                        <t t-set="task_data" t-value="doc.get_last_tasks()"/>
+                        <table class="table table-bordered">
                             <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">Test Name</th>
-                                    <th scope="col">After Service?</th>
-                                    <th scope="col">Completed On</th>
-                                    <th scope="col">Score</th>
-                                    <th scope="col">Notes</th>
-                                </tr>
-                            </thead>
+                                    <tr>
+                                        <th scope="col">Service Order</th>
+                                        <th scope="col">Task Name</th>
+                                        <th scope="col">Completed On</th>
+                                        <th scope="col">Completed By</th>
+                                        <th scope="col">Score</th>
+                                        <th scope="col">Notes</th>
+                                    </tr>
+                                </thead>
                             <tbody>
-                                <t t-foreach="activity_data" t-as="task">
+                                <t t-foreach="task_data" t-as="task">
                                     <tr>
                                         <td>
-                                            <t t-esc="task['name']"/>
-                                        </td>
-                                        <!--Actual values are commented out so that field agent can fill in by hand-->
-                                        <!--TODO: move this logic in case needed in another report-->
-                                        <td>
-                                            <!--<p t-if="task['after']">True</p>-->
-                                            <!--<p t-else="">False</p>-->
+                                            <span t-esc="doc.last_service_order_name"/>
                                         </td>
                                         <td>
-                                            <!--<t t-esc="task['completed_on']" options="{'format': 'DD/MM/YYYY'}"/>-->
+                                            <span t-esc="task.name"/>
                                         </td>
                                         <td>
-                                            <!--Only show score if it is not 0-->
-                                            <!--<p t-if="(task['score'] != 0.00)"><t t-esc="task['score']"/></p>-->
-                                            <!--<p t-else="">N/A</p>-->
+                                            <span t-field="task.completed_on" options="{'format': 'DD/MM/YYYY'}"/>
                                         </td>
                                         <td>
-                                            <!--<t t-esc="task['notes']"/>-->
+                                            <span t-field="task.completed_by"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="task.score"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="task.notes"/>
                                         </td>
                                     </tr>
                                 </t>
+                            </tbody>
+                        </table>
+                    </t>
+
+                    <hr/>
+
+                    <!-- Table showing tasks with space for written results -->
+                    <div t-if="doc.order_activity_ids" id="activities">
+                        <t t-set="activity_data" t-value="doc.get_activity_data()"/>
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Hardness</th>
+                                    <th scope="col">pH</th>
+                                    <th scope="col">TDS</th>
+                                    <th scope="col">Iron</th>
+                                    <th scope="col">Chlorine</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

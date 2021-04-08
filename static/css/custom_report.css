@@ -25,6 +25,6 @@ tbody tr {
     height: 35px;
 }
 
-#activities tbody tr {
+tbody tr {
     min-height: 80px;
 }
