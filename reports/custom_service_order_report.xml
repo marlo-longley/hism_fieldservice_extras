@@ -40,9 +40,9 @@
                 <!-- All content must be put inside "page" class div-->
                 <div class="page">
                     <div class="row">
-                        <!-- The company's address and Order Info-->
                         <!-- Left column-->
                         <div class="col-6">
+                                <!-- The company's order Info-->
                                 <strong><span t-esc="doc.company_id.name"/></strong><br/>
                                 <strong>FS Order #</strong>
                                 <span t-field="doc.name"/>
@@ -60,6 +60,7 @@
                             <t t-if="doc.computed_address">
                                 <span t-esc="doc.computed_address"/>
                             </t>
+
                             <!-- Contact methods-->
                             <strong>Contact Info:</strong><br />
                             <ul>
@@ -76,19 +77,21 @@
                                     <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
                                 </t>
                             </ul>
-
                         </div>
                     </div>
+
                     <!-- Directions-->
                     <strong>Directions:</strong><br />
                     <t t-raw="doc.site_directions"/>
+
                     <hr/>
 
-                    <!-- Last Service-->
-                        <strong>Last Service Date (Scheduled Start Date): &#160;</strong>
-                        <span t-if="doc.last_service_order_id"><span t-esc="doc.last_service_order_date"/></span>
+                    <!-- Last Service Date-->
+                        <p><strong>Last Service Date (Scheduled Start Date): &#160;</strong></p>
+                        <span t-if="doc.last_service_order_id"><span t-esc="doc.last_service_order_date" options="{'format': 'DD/MM/YYYY'}"/></span>
                         <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
 
+                    <!-- Last Service Table with completed tasks -->
                     <t t-if="doc.last_service_order_id">
                         <t t-set="task_data" t-value="doc.get_last_tasks()"/>
                         <table class="table table-bordered">
@@ -131,7 +134,7 @@
 
                     <hr/>
 
-                    <!-- Table showing tasks with space for written results -->
+                    <!-- Table with water tests with space for written results -->
                     <div t-if="doc.order_activity_ids" id="activities">
                         <t t-set="activity_data" t-value="doc.get_activity_data()"/>
                         <table class="table table-bordered">
@@ -148,27 +151,27 @@
                             <tbody>
                                 <tr>
                                     <th scope="row">1</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">2</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">3</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
                                 </tr>
                             </tbody>
                         </table>

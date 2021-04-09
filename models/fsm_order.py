@@ -4,10 +4,10 @@ from odoo import models, fields, api
 class HISMFieldserviceOrder(models.Model):
     _inherit = "fsm.order"
 
-
     # Get the list of tasks performed on this order
     order_activity_ids = fields.One2many('fsm.activity', 'fsm_order_id',
                                          'Activitiy IDs')
+    # Called from custom service order report
     def get_activity_data(self):
         if self.order_activity_ids:
             activity_list = []
@@ -22,6 +22,7 @@ class HISMFieldserviceOrder(models.Model):
                                       'state': activity.state})
             return activity_list
 
+    # Bugfix
     @api.onchange('template_id')
     # Need to avoid calling parent fieldservice_activity/fsm_order.py because it contains a bug https://github.com/OCA/field-service/issues/509
     # This workaround isn't ideal but it prevents tasks being deleted from templates
@@ -45,8 +46,7 @@ class HISMFieldserviceOrder(models.Model):
 
 
     # Calculate a bunch of values needed for the custom Service order Report
-    # Computed fields used in 'groupby' (e.g. graphs in views/report.xml) must be set to store=True
-    # Note, store=True fields are not recomputed if a value exists in DB
+    # Note, store=True fields are not recomputed if a value exists in DB (not set here)
     site_name = fields.Char(compute='_compute_partner_data', string='Site Name', type='Char')
     site_directions = fields.Char(compute='_compute_partner_data', string='Site Direction', type='Char')
     site_street = fields.Char(compute='_compute_partner_data', string='Site Street', type='Char')
@@ -61,7 +61,7 @@ class HISMFieldserviceOrder(models.Model):
     @api.depends('location_id')
     def _compute_partner_data(self):
         if self.location_id:
-            # Get the site information from fsm.location
+            # Get the site information from fsm.location table
             site = self.env['fsm.location'].browse(self.location_id.id)
             self.site_name = site.complete_name
             self.site_directions = site.direction
@@ -75,30 +75,32 @@ class HISMFieldserviceOrder(models.Model):
             # computed_address is a computed field on res.partner we can access
             self.computed_address = partner_model.contact_address
 
-
-
+    # Create fields for info on the most recent service order for this location
     last_service_order_id = fields.Char(compute='_compute_last_service_order', string='Last Order ID', type='Char')
     last_service_order_name = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
     last_service_order_date = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
 
-    # Returns last service
     # Called from the report view
     @api.multi
     def _compute_last_service_order(self):
-        # Get the other service orders that started before the current record, are not the same as the curent record, and share the same service location
-        # Then select the first item in list since list is desc. That will be the most recent order in this location.
+        # Get the other service orders that started before the current record, are not actually the current record, and share the same service location
+        # Then select the first item in list since list is ordered by desc. That will be the most recent order in this location.
         related_service_orders = self.env['fsm.order'].search([('location_id', '=', self.location_id.id),
                                                                ('id', '!=', self.id),
                                                                ('scheduled_date_start', '<', self.scheduled_date_start)],
                                                               order='scheduled_date_start desc')
+
+        # If any orders meet all those criteria, set the fields
+        # Also setting a return value that can be used in other functions
         if len(related_service_orders) > 0:
             self.last_service_order_id = related_service_orders[0].id
             self.last_service_order_name = related_service_orders[0].name
             self.last_service_order_date = related_service_orders[0].scheduled_date_start
             return related_service_orders[0].id
 
-    # Returns list of res.partner that have the same parent_id has this order's fms.location's owner_id
+    # Returns list of fsm.activities that belong to the last_service_order
     # Called from the report view
+    # Only called if last_service_order has value
     @api.multi
     def get_last_tasks(self):
         id = self._compute_last_service_order()

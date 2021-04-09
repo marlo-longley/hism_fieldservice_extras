@@ -1,19 +1,11 @@
-.address, .address li {
-    list-style: none;
-    padding-left: 0;
-}
-
 .order-info {
     padding-top: 5px;
 }
 
-p#instructions {
-    padding-top: 5px;
+hr {
+    margin: 20px 0;
 }
 
-.note-block {
-    height: 100px;
-}
 .table {
     margin-bottom: 0;
 }
@@ -26,5 +18,8 @@ tbody tr {
 }
 
 tbody tr {
-    min-height: 80px;
+    min-height: 100px;
+}
+tbody td {
+    min-height: 100px;
 }
