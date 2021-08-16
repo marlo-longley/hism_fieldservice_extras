@@ -2,6 +2,14 @@
     padding-top: 5px;
 }
 
+.row {
+    margin-bottom: 10px;
+}
+
+.empty {
+    min-height: 200px;
+}
+
 hr {
     margin: 20px 0;
 }
@@ -13,13 +21,21 @@ hr {
     padding: 0 0 0 5px;
 }
 
-tbody tr {
+.table.tests {
+    margin-bottom: 30px;
+}
+
+.table.tests tbody tr {
     height: 35px;
 }
 
-tbody tr {
+.table.tests tbody tr {
     min-height: 100px;
 }
-tbody td {
+.table.tests tbody td {
     min-height: 100px;
+}
+
+.large-font {
+    font-size: 30px;
 }

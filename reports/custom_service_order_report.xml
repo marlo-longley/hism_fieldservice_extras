@@ -42,49 +42,77 @@
                     <div class="row">
                         <!-- Left column-->
                         <div class="col-6">
-                                <!-- The company's order Info-->
-                                <strong><span t-esc="doc.company_id.name"/></strong><br/>
-                                <strong>FS Order #</strong>
-                                <span t-field="doc.name"/>
-                                <t t-if="doc.template_id">(<span t-field="doc.template_id.name"/>)
-                                </t><br/>
-                                <strong>Scheduled Start Date:</strong>
-                                <span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"/><br/>
-                                <strong>Assigned To:</strong>
-                                <span t-field="doc.person_id"/>
+                            <span class="large-font"><b>AWS WORK ORDER</b></span>&#160;
                         </div>
-                        <!-- Right column-->
-                        <div class="col-6">
-                            <!-- The client/service location address-->
-                            <strong><span t-esc="doc.site_name"/></strong><br />
-                            <t t-if="doc.computed_address">
-                                <span t-esc="doc.computed_address"/>
-                            </t>
+                        <div class="col-6 my-auto">
+                            <span><b>Scheduled Start Date:</b>&#160;<span t-esc="context_timestamp(doc.scheduled_date_start).strftime('%m/%d/%Y')"/></span>
+                            &#160;&#160;<span><b>Order #:</b></span>&#160;<span t-esc="doc.name"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                                <!-- The company's Info-->
+<!--                                <img src="/hism_fieldservice_extras/static/img/aws_logo_CMYK.png" class="img-responsive" width="100%" />-->
+<!--                                <strong><span t-esc="doc.company_id.name"/></strong><br/>-->
+<!--                                <span t-esc="doc.company_id.street"/><br/>-->
+<!--                                <span t-esc="doc.company_id.city"/>,&#160; <span t-esc="doc.company_id.state_id.name"/>&#160;<span t-esc="doc.company_id.zip"/><br/>-->
+<!--                                <span t-esc="doc.company_id.phone"/><br/>-->
+<!--                                <span t-esc="doc.company_id.email"/><br/>-->
+<!--                                client SITE address-->
 
-                            <!-- Contact methods-->
-                            <strong>Contact Info:</strong><br />
-                            <ul>
-                                <!-- Call model method to get related contacts -->
-                                <!-- Only load contacts with data in the phone, email, or mobile fields -->
-                                <t t-set="related_contacts" t-value="doc.get_related_contacts()"/>
-                                <t t-foreach="related_contacts.filtered(lambda r: r.phone != False)" t-as="obj" >
-                                    <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.phone"/></li>
+                                <strong>Client Location:</strong><br/>
+                                <t t-if="doc.site_name">
+                                  <span t-esc="doc.site_name"/><br />
                                 </t>
-                                <t t-foreach="related_contacts.filtered(lambda r: r.mobile != False)" t-as="obj" >
-                                    <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.mobile"/></li>
+                                <t t-if="doc.site_street">
+                                    <span t-esc="doc.site_street"/><br />
                                 </t>
-                                <t t-foreach="related_contacts.filtered(lambda r: r.email != False)" t-as="obj" >
-                                    <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
+                                <t t-if="doc.site_street2">
+                                    <span t-esc="doc.site_street2"/><br />
                                 </t>
-                            </ul>
+                                <t t-if="doc.site_city">
+                                    <span t-esc="doc.site_city"/><br />
+                                </t>
+                                <t t-if="doc.site_state">
+                                    <span t-esc="doc.site_state"/><br />
+                                </t>
+                                <t t-if="doc.site_zip">
+                                    <span t-esc="doc.site_zip"/><br />
+                                </t>
+                        </div>
+                        <div class="col-4">
+                            <p><b>Billing if different:</b></p>
+                            <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
+                                <t t-foreach="related_contacts.filtered(lambda r: r.type == 'invoice')" t-as="obj" >
+                                    <strong><span t-field="obj.street"/></strong>
+                                </t>
+                        </div>
+                        <div class="col-4">
+                              <!-- Directions-->
+                            <strong>Directions:</strong><br />
+                            <t t-raw="doc.site_directions"/>
                         </div>
                     </div>
 
-                    <!-- Directions-->
-                    <strong>Directions:</strong><br />
-                    <t t-raw="doc.site_directions"/>
-
                     <hr/>
+
+
+                    <!-- Contact methods-->
+                        <strong>Contact Info:</strong><br />
+                        <ul>
+                            <!-- Call model method to get sibling contacts (entries that share the same owner id) -->
+                            <!-- Only load contacts with data in the phone, email, or mobile fields -->
+                            <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
+                            <t t-foreach="related_contacts.filtered(lambda r: r.phone != False)" t-as="obj" >
+                                <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.phone"/></li>
+                            </t>
+                            <t t-foreach="related_contacts.filtered(lambda r: r.mobile != False)" t-as="obj" >
+                                <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.mobile"/></li>
+                            </t>
+                            <t t-foreach="related_contacts.filtered(lambda r: r.email != False)" t-as="obj" >
+                                <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
+                            </t>
+                        </ul>
 
                     <!-- Last Service Date-->
                         <p><strong>Last Service Date (Scheduled Start Date): &#160;</strong></p>
@@ -92,65 +120,84 @@
                         <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
 
                     <!-- Last Service Table with completed tasks -->
-                    <t t-if="doc.last_service_order_id">
-                        <t t-set="task_data" t-value="doc.get_last_tasks()"/>
-                        <table class="table table-bordered">
-                            <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Service Order</th>
-                                        <th scope="col">Task Name</th>
-                                        <th scope="col">Completed On</th>
-                                        <th scope="col">Completed By</th>
-                                        <th scope="col">Score</th>
-                                        <th scope="col">Notes</th>
-                                    </tr>
-                                </thead>
-                            <tbody>
-                                <t t-foreach="task_data" t-as="task">
-                                    <tr>
-                                        <td>
-                                            <span t-esc="doc.last_service_order_name"/>
-                                        </td>
-                                        <td>
-                                            <span t-esc="task.name"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="task.completed_on" options="{'format': 'DD/MM/YYYY'}"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="task.completed_by"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="task.score"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="task.notes"/>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                    </t>
+                    <div t-if="doc.last_service_order_id">
+                        <t t-esc="doc.last_service_order_description"/>
+
+<!--                        <table class="table table-bordered">-->
+<!--                            <thead class="thead-dark">-->
+<!--                                    <tr>-->
+<!--                                        <th scope="col">Service Order</th>-->
+<!--                                        <th scope="col">Task Name</th>-->
+<!--                                        <th scope="col">Completed On</th>-->
+<!--                                        <th scope="col">Completed By</th>-->
+<!--                                        <th scope="col">Score</th>-->
+<!--                                        <th scope="col">Notes</th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                            <tbody>-->
+<!--                                <t t-foreach="task_data" t-as="task">-->
+<!--                                    <tr>-->
+<!--                                        <td>-->
+<!--                                            <span t-esc="doc.last_service_order_name"/>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <span t-esc="task.name"/>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <span t-field="task.completed_on" options="{'format': 'DD/MM/YYYY'}"/>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <span t-field="task.completed_by"/>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <span t-field="task.score"/>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <span t-field="task.notes"/>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </t>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+                    </div>
 
                     <hr/>
+                    <div class="row">
+                        <div class="col-6 empty">
+                            <strong>Maintenence Tasks</strong><br />
+                        </div>
+                        <div class="col-6 empty">
+                            <strong>Additional Notes</strong><br />
+                        </div>
+                    </div>
 
                     <!-- Table with water tests with space for written results -->
-                    <div t-if="doc.order_activity_ids" id="activities">
-                        <t t-set="activity_data" t-value="doc.get_activity_data()"/>
-                        <table class="table table-bordered">
-                            <thead class="thead-dark">
+<!--                    <div t-if="doc.order_activity_ids" id="activities">-->
+<!--                        <t t-set="activity_data" t-value="doc.get_activity_data()"/>-->
+                    <div class="row"><strong>Tests Performed</strong></div>
+                    <div class="row">
+                        <table class="table table-bordered tests">
+                            <thead class="thead-dark text-center">
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">&#160;</th>
+                                    <th scope="col">Pressure</th>
                                     <th scope="col">Hardness</th>
                                     <th scope="col">pH</th>
                                     <th scope="col">TDS</th>
                                     <th scope="col">Iron</th>
+                                    <th scope="col">Mang.</th>
+                                    <th scope="col">Nitrate</th>
+                                    <th scope="col">Copper</th>
                                     <th scope="col">Chlorine</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">1</th>
+                                    <th scope="row">UNTREATED</th>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
                                     <td>&#160;</td>
                                     <td>&#160;</td>
                                     <td>&#160;</td>
@@ -158,7 +205,11 @@
                                     <td>&#160;</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">2</th>
+                                    <th scope="row">AFTER</th>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
                                     <td>&#160;</td>
                                     <td>&#160;</td>
                                     <td>&#160;</td>
@@ -166,7 +217,23 @@
                                     <td>&#160;</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">3</th>
+                                    <th scope="row">AFTER</th>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">AFTER</th>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
                                     <td>&#160;</td>
                                     <td>&#160;</td>
                                     <td>&#160;</td>
@@ -176,6 +243,61 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="row"><strong>Parts Used / Cost Breakdown</strong></div>
+                      <div class="row">
+                        <table class="table table-bordered">
+                            <thead class="thead-dark text-center">
+                                <tr>
+                                    <th scope="col">QTY.</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">QTY. B.O.</th>
+                                    <th scope="col">Shipped</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+
                 </div>
             </t>
         </t>
