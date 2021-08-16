@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- This modifies the standard invoice layout -->
+    <data>
+        <template id="modified_invoice_report1" inherit_id="account.report_invoice_document" priority="17">
+            <xpath expr="//div[@class='page']/p[1]" position="replace">
+                <div>
+                    <span>Thank you for your business.</span><br/>
+                    <span>Invoice due upon receipt.</span><br/><br/>
+                    <span><b>Please send payment to:</b></span><br/>
+                    <span>Advanced Water Systems</span><br/>
+                    <span>PO Box 284</span><br/>
+                    <span>Capitola, CA 95010</span>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='informations']" position="before">
+                <div>
+                    <t t-if="o.commercial_partner_id.name">
+                      <span t-esc="o.commercial_partner_id.name"/><br />
+                    </t>
+                    <t t-if="o.commercial_partner_id.street">
+                        <span t-esc="o.commercial_partner_id.street"/><br />
+                    </t>
+                    <t t-if="o.commercial_partner_id.street2">
+                        <span t-esc="o.commercial_partner_id.street2"/><br />
+                    </t>
+                    <t t-if="o.commercial_partner_id.city">
+                        <span t-esc="o.commercial_partner_id.city"/>,
+                    </t>
+                    <t t-if="o.commercial_partner_id.state_id.name">
+                        <span t-esc="o.commercial_partner_id.state_id.name"/>,
+                    </t>
+                    <t t-if="o.commercial_partner_id.zip">
+                        <span t-esc="o.commercial_partner_id.zip"/><br />
+                    </t>
+                </div>
+            </xpath>
+        </template>
+
+
+    </data>
+</odoo>
