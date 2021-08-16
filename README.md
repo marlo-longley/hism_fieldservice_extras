@@ -47,11 +47,24 @@ For Docker, assuming your files are in `/addons` locally :
 2. `docker pull postgres:10`
 3. `docker run -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:10`
 4.  `docker run -v /addons:/var/lib/odoo/addons/12.0 -p 8069:8069 --name odoo --link db:db -t odoo:12.0`
+NOTE: you can add`--dev all` flag which will allow you to quickly see changes in report templates
+	
+ To remake containter 
+Note: to select the name of database you want to use, use the --db-filter option 	
+`docker ps -aqf "name=odoo" --no-trunc | xargs -I{} docker rm {} && docker run -v ${PWD}/odoo-addons:/var/lib/odoo/addons/12.0 -p 8069:8069 --name odoo --link db:restored -t odoo:12.0 --db-filter=restored
+`	
 5. To look around container: `docker exec -it odoo bin/sh `
 6. On first run, you'll get an Odoo configuration screen. If using the above commands, enter Database Name option as `db`. The other options like Email and Password you can create arbitrarily. Use Demo Data if you don't plan on importing anything.
 7. If this module isn't showing up in Apps, enter Development Mode, and hit "Update Apps List".
-8. Faster for development: to update the module from the command line using odoo CLI (once inside the container):
-`odoo -d db -u hism_fieldservice_extras --db_host db --db_password odoo --no-http`
+8. Faster for development: to update the module from the command line using odoo CLI (once inside the container, example using restored db name):
+`odoo -d odoo --db_host restored --db_password odoo --db-filter restored -u hism_fieldservice_extras --no-http --dev all`
+   
+Get into the container:
+docker exec -it odoo bin/sh
+
+Default Odoo login
+marlo@human-ism.com
+odoo
 
 GOTCHA/Weird Stuff:
 1. `odoo.define is not a function` ERROR:
@@ -68,6 +81,7 @@ I used pgAdmin docker image to do this:
 		-d dpage/pgadmin4
 	```
 	Then, use the docker run command above to find db credentials.
+You can use `docker inspect db` to get the IP address to enter into PgAdmin to connect to the server. It's been  172.17.0.2 on my machine. Then login is odoo/odoo.
 
   
 2. Custom PDF report styles. 
