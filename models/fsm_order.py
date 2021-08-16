@@ -54,6 +54,7 @@ class HISMFieldserviceOrder(models.Model):
     site_city = fields.Char(compute='_compute_partner_data', string='Site City', type='Char')
     site_state = fields.Char(compute='_compute_partner_data', string='Site State', type='Char')
     site_zip = fields.Char(compute='_compute_partner_data', string='Site Zip', type='Char')
+    # TODO: is owner_id actually being set? OR used? Seems no.
     owner_id = fields.Char(compute='_compute_partner_data', string='Site Owner', type='Char')
     computed_address = fields.Char(compute='_compute_partner_data', string='Site Address', type='Char')
 
@@ -65,14 +66,14 @@ class HISMFieldserviceOrder(models.Model):
             site = self.env['fsm.location'].browse(self.location_id.id)
             self.site_name = site.complete_name
             self.site_directions = site.direction
-            # Get the partner res.partner model
+            # Get the partner res.partner model of the site address
             partner_model = self.env['res.partner'].browse(self.location_id.partner_id.id)
             self.site_street = partner_model.street
             self.site_street2 = partner_model.street2
             self.site_city = partner_model.city
             self.site_state = partner_model.state_id.name
             self.site_zip = partner_model.zip
-            # computed_address is a computed field on res.partner we can access
+            # contact_address is a builtin computed field on res.partner we can access
             self.computed_address = partner_model.contact_address
 
     # Create fields for info on the most recent service order for this location
@@ -96,6 +97,7 @@ class HISMFieldserviceOrder(models.Model):
             self.last_service_order_id = related_service_orders[0].id
             self.last_service_order_name = related_service_orders[0].name
             self.last_service_order_date = related_service_orders[0].scheduled_date_start
+            self.last_service_order_description = related_service_orders[0].description
             return related_service_orders[0].id
 
     # Returns list of fsm.activities that belong to the last_service_order
@@ -110,7 +112,7 @@ class HISMFieldserviceOrder(models.Model):
     # Returns list of res.partner that have the same parent_id has this order's fms.location's owner_id
     # Called from the report view
     @api.multi
-    def get_related_contacts(self):
+    def get_sibling_contacts(self):
         owner_id = self.location_id.owner_id.id
         related_contacts = self.env['res.partner'].search([('parent_id', '=', owner_id)])
         return related_contacts
