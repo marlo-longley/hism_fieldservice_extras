@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
+<!--    This modifies the standard report layout (not custom service order report)-->
     <template id="external_layout_header" inherit_id="web.external_layout_standard">
         <xpath expr="//div[@class='header']" position="replace">
 <!--            This replace with nothing is a workaround approach to removing the company title from the header section.-->

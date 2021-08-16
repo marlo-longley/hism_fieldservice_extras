@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <odoo>
+    <!--    This modifies the standard report layout (not custom service order report)-->
     <data>
         <template id="custom_report_address" inherit_id="web.address_layout">
             <xpath expr="//div[hasclass('address', 'row')]" position="replace">
                 <div class="address row">
                     <div class="col-6">
+                        <img src="/hism_fieldservice_extras/static/img/aws_logo_CMYK.png" />
                         <span t-esc="o.company_id.name"/><br/>
                         <span t-esc="o.company_id.street"/><br/>
                         <span t-esc="o.company_id.city"/>,&#160; <span t-esc="o.company_id.state_id.name"/>&#160;<span t-esc="o.company_id.zip"/><br/>
