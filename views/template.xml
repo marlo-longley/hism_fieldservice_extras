@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Adds a tasks tab to the field service view-->
 <odoo>
 	<data>
 		<record id="hism_template_form_inherit" model="ir.ui.view">
