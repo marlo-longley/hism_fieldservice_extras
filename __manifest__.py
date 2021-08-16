@@ -17,7 +17,8 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'fieldservice', 'fieldservice_activity'],
+    # need account dependency because we are extending an account template for modifying the invoice report
+    'depends': ['base', 'account', 'fieldservice', 'fieldservice_activity', ],
 
     # always loaded
     'data': [
@@ -27,6 +28,7 @@
         'reports/custom_service_order_report.xml',
         'reports/custom_report_header.xml',
         'reports/custom_report_address.xml',
+        'reports/modified_invoice_report.xml',
         'views/field_service_location_form.xml',
         'views/field_service_worker_form.xml'
     ],
