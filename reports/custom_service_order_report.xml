@@ -51,34 +51,25 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                                <!-- The company's Info-->
-<!--                                <img src="/hism_fieldservice_extras/static/img/aws_logo_CMYK.png" class="img-responsive" width="100%" />-->
-<!--                                <strong><span t-esc="doc.company_id.name"/></strong><br/>-->
-<!--                                <span t-esc="doc.company_id.street"/><br/>-->
-<!--                                <span t-esc="doc.company_id.city"/>,&#160; <span t-esc="doc.company_id.state_id.name"/>&#160;<span t-esc="doc.company_id.zip"/><br/>-->
-<!--                                <span t-esc="doc.company_id.phone"/><br/>-->
-<!--                                <span t-esc="doc.company_id.email"/><br/>-->
-<!--                                client SITE address-->
-
-                                <strong>Client Location:</strong><br/>
-                                <t t-if="doc.site_name">
-                                  <span t-esc="doc.site_name"/><br />
-                                </t>
-                                <t t-if="doc.site_street">
-                                    <span t-esc="doc.site_street"/><br />
-                                </t>
-                                <t t-if="doc.site_street2">
-                                    <span t-esc="doc.site_street2"/><br />
-                                </t>
-                                <t t-if="doc.site_city">
-                                    <span t-esc="doc.site_city"/><br />
-                                </t>
-                                <t t-if="doc.site_state">
-                                    <span t-esc="doc.site_state"/><br />
-                                </t>
-                                <t t-if="doc.site_zip">
-                                    <span t-esc="doc.site_zip"/><br />
-                                </t>
+                            <strong>Client Location:</strong><br/>
+                            <t t-if="doc.site_name">
+                              <span t-esc="doc.site_name"/><br />
+                            </t>
+                            <t t-if="doc.site_street">
+                                <span t-esc="doc.site_street"/><br />
+                            </t>
+                            <t t-if="doc.site_street2">
+                                <span t-esc="doc.site_street2"/><br />
+                            </t>
+                            <t t-if="doc.site_city">
+                                <span t-esc="doc.site_city"/><br />
+                            </t>
+                            <t t-if="doc.site_state">
+                                <span t-esc="doc.site_state"/><br />
+                            </t>
+                            <t t-if="doc.site_zip">
+                                <span t-esc="doc.site_zip"/><br />
+                            </t>
                         </div>
                         <div class="col-4">
                             <p><b>Billing if different:</b></p>

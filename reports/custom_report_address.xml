@@ -9,13 +9,7 @@
                         <img src="/hism_fieldservice_extras/static/img/aws_logo_CMYK.png" class="img-responsive" width="100%" />
                         <span t-esc="o.company_id.street"/>,
                         <span t-esc="o.company_id.city"/>,&#160;<span t-esc="o.company_id.state_id.name"/>&#160;<span t-esc="o.company_id.zip"/><br/>
-                        <span t-esc="o.company_id.phone"/><br/>
-                        <span t-esc="o.company_id.email"/><br/>
                     </div>
-<!--                    <div name="address" class="col-6">-->
-<!--                        <h4 class="client-address">Client:</h4>-->
-<!--                        <t t-raw="address"/>-->
-<!--                    </div>-->
                 </div>
             </xpath>
         </template>
