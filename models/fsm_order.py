@@ -79,7 +79,8 @@ class HISMFieldserviceOrder(models.Model):
     # Create fields for info on the most recent service order for this location
     last_service_order_id = fields.Char(compute='_compute_last_service_order', string='Last Order ID', type='Char')
     last_service_order_name = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
-    last_service_order_date = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
+    last_service_order_date = fields.Date(compute='_compute_last_service_order', string='Last Order Name', type='Char')
+    last_service_order_description = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
 
     # Called from the report view
     @api.multi
@@ -96,7 +97,7 @@ class HISMFieldserviceOrder(models.Model):
         if len(related_service_orders) > 0:
             self.last_service_order_id = related_service_orders[0].id
             self.last_service_order_name = related_service_orders[0].name
-            self.last_service_order_date = related_service_orders[0].scheduled_date_start
+            self.last_service_order_date = related_service_orders[0].scheduled_date_start.date()
             self.last_service_order_description = related_service_orders[0].description
             return related_service_orders[0].id
 

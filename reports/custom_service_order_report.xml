@@ -104,58 +104,23 @@
                                 <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
                             </t>
                         </ul>
-
-                    <!-- Last Service Date-->
-                        <p><strong>Last Service Date (Scheduled Start Date): &#160;</strong></p>
-                        <span t-if="doc.last_service_order_id"><span t-esc="doc.last_service_order_date" options="{'format': 'DD/MM/YYYY'}"/></span>
-                        <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
-
-                    <!-- Last Service Table with completed tasks -->
+                        <!-- Last Service Date and notes -->
+                        <div>
+                            <strong>Last Service Date (Scheduled Start Date): &#160;</strong>
+                            <span t-if="doc.last_service_order_id">
+                                <span t-esc="doc.last_service_order_date.strftime('%m/%d/%Y')"/>
+                            </span>
+                            <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
+                        </div>
+                    <!-- Last Service Notes with completed tasks -->
                     <div t-if="doc.last_service_order_id">
                         <t t-esc="doc.last_service_order_description"/>
-
-<!--                        <table class="table table-bordered">-->
-<!--                            <thead class="thead-dark">-->
-<!--                                    <tr>-->
-<!--                                        <th scope="col">Service Order</th>-->
-<!--                                        <th scope="col">Task Name</th>-->
-<!--                                        <th scope="col">Completed On</th>-->
-<!--                                        <th scope="col">Completed By</th>-->
-<!--                                        <th scope="col">Score</th>-->
-<!--                                        <th scope="col">Notes</th>-->
-<!--                                    </tr>-->
-<!--                                </thead>-->
-<!--                            <tbody>-->
-<!--                                <t t-foreach="task_data" t-as="task">-->
-<!--                                    <tr>-->
-<!--                                        <td>-->
-<!--                                            <span t-esc="doc.last_service_order_name"/>-->
-<!--                                        </td>-->
-<!--                                        <td>-->
-<!--                                            <span t-esc="task.name"/>-->
-<!--                                        </td>-->
-<!--                                        <td>-->
-<!--                                            <span t-field="task.completed_on" options="{'format': 'DD/MM/YYYY'}"/>-->
-<!--                                        </td>-->
-<!--                                        <td>-->
-<!--                                            <span t-field="task.completed_by"/>-->
-<!--                                        </td>-->
-<!--                                        <td>-->
-<!--                                            <span t-field="task.score"/>-->
-<!--                                        </td>-->
-<!--                                        <td>-->
-<!--                                            <span t-field="task.notes"/>-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                </t>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
                     </div>
 
                     <hr/>
                     <div class="row">
                         <div class="col-6 empty">
-                            <strong>Maintenence Tasks</strong><br />
+                            <strong>Maintenance Tasks</strong><br />
                         </div>
                         <div class="col-6 empty">
                             <strong>Additional Notes</strong><br />
