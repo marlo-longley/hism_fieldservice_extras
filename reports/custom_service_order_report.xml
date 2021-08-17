@@ -62,20 +62,37 @@
                                 <span t-esc="doc.site_street2"/><br />
                             </t>
                             <t t-if="doc.site_city">
-                                <span t-esc="doc.site_city"/><br />
+                                <span t-esc="doc.site_city"/>,
                             </t>
                             <t t-if="doc.site_state">
-                                <span t-esc="doc.site_state"/><br />
+                                <span t-esc="doc.site_state"/>,
                             </t>
                             <t t-if="doc.site_zip">
-                                <span t-esc="doc.site_zip"/><br />
+                                <span t-esc="doc.site_zip"/>
                             </t>
                         </div>
                         <div class="col-4">
                             <p><b>Billing if different:</b></p>
                             <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
                                 <t t-foreach="related_contacts.filtered(lambda r: r.type == 'invoice')" t-as="obj" >
-                                    <strong><span t-field="obj.street"/></strong>
+                                    <t t-if="obj.name">
+                                      <span t-esc="obj.name"/><br />
+                                    </t>
+                                    <t t-if="obj.street">
+                                        <span t-esc="obj.street"/><br />
+                                    </t>
+                                    <t t-if="obj.street2">
+                                        <span t-esc="obj.street2"/><br />
+                                    </t>
+                                    <t t-if="obj.city">
+                                        <span t-esc="obj.city"/>,
+                                    </t>
+                                    <t t-if="obj.state_id.name">
+                                        <span t-esc="obj.state_id.name"/>,
+                                    </t>
+                                    <t t-if="obj.zip">
+                                        <span t-esc="obj.zip"/>
+                                    </t>
                                 </t>
                         </div>
                         <div class="col-4">
@@ -87,43 +104,57 @@
 
                     <hr/>
 
+                <!-- Contact methods-->
+                    <strong>Contact Info:</strong><br />
+                    <ul>
+                        <!-- Call model method to get sibling contacts (entries that share the same owner id) -->
+                        <!-- Only load contacts with data in the phone, email, or mobile fields -->
+                        <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
+                        <t t-foreach="related_contacts.filtered(lambda r: r.phone != False)" t-as="obj" >
+                            <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.phone"/></li>
+                        </t>
+                        <t t-foreach="related_contacts.filtered(lambda r: r.mobile != False)" t-as="obj" >
+                            <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.mobile"/></li>
+                        </t>
+                        <t t-foreach="related_contacts.filtered(lambda r: r.email != False)" t-as="obj" >
+                            <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
+                        </t>
+                    </ul>
 
-                    <!-- Contact methods-->
-                        <strong>Contact Info:</strong><br />
-                        <ul>
-                            <!-- Call model method to get sibling contacts (entries that share the same owner id) -->
-                            <!-- Only load contacts with data in the phone, email, or mobile fields -->
-                            <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
-                            <t t-foreach="related_contacts.filtered(lambda r: r.phone != False)" t-as="obj" >
-                                <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.phone"/></li>
-                            </t>
-                            <t t-foreach="related_contacts.filtered(lambda r: r.mobile != False)" t-as="obj" >
-                                <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.mobile"/></li>
-                            </t>
-                            <t t-foreach="related_contacts.filtered(lambda r: r.email != False)" t-as="obj" >
-                                <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
-                            </t>
-                        </ul>
-                        <!-- Last Service Date and notes -->
-                        <div>
-                            <strong>Last Service Date (Scheduled Start Date): &#160;</strong>
-                            <span t-if="doc.last_service_order_id">
-                                <span t-esc="doc.last_service_order_date.strftime('%m/%d/%Y')"/>
-                            </span>
-                            <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
-                        </div>
-                    <!-- Last Service Notes with completed tasks -->
-                    <div t-if="doc.last_service_order_id">
-                        <t t-esc="doc.last_service_order_description"/>
-                    </div>
+                    <!-- Last Service Date and notes -->
+<!--                    <div>-->
+<!--                        <strong>Last Service Date (Scheduled Start Date): &#160;</strong>-->
+<!--                        <span t-if="doc.last_service_order_id">-->
+<!--                            <span t-esc="doc.last_service_order_date.strftime('%m/%d/%Y')"/>-->
+<!--                        </span>-->
+<!--                        <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Last Service Notes with completed tasks &ndash;&gt;-->
+<!--                    <div t-if="doc.last_service_order_id">-->
+<!--                        <t t-esc="doc.last_service_order_description"/>-->
+<!--                    </div>-->
 
                     <hr/>
                     <div class="row">
                         <div class="col-6 empty">
-                            <strong>Maintenance Tasks</strong><br />
+                            <strong>Previous Service Notes</strong><br />
+                            <div>
+                            Date (Scheduled Start Date):
+                            <span t-if="doc.last_service_order_id">
+                                <span t-esc="doc.last_service_order_date.strftime('%m/%d/%Y')"/>
+                                <div t-if="doc.last_service_order_id">
+                                    <t t-esc="doc.last_service_order_description"/>
+                                </div>
+                            </span>
+                            <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
+                    </div>
                         </div>
                         <div class="col-6 empty">
-                            <strong>Additional Notes</strong><br />
+                            <strong>Service Notes (will display on next service)</strong><br />
+                            <span t-if="doc.description">
+                                <span t-esc="doc.description"/>
+                            </span>
                         </div>
                     </div>
 
