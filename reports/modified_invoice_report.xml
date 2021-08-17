@@ -2,7 +2,15 @@
 <odoo>
 <!-- This modifies the standard invoice layout -->
     <data>
-        <template id="modified_invoice_report1" inherit_id="account.report_invoice_document" priority="17">
+
+        <template id="custom_service_order_report_styles" inherit_id="web.report_assets_common">
+            <xpath expr="." position="inside">
+                <link href="/hism_fieldservice_extras/static/css/custom_report.css" rel="stylesheet" type="text/scss"/>
+            </xpath>
+        </template>
+
+
+        <template id="modified_invoice_report" inherit_id="account.report_invoice_document">
             <xpath expr="//div[@class='page']/p[1]" position="replace">
                 <div>
                     <span>Thank you for your business.</span><br/>
@@ -13,30 +21,31 @@
                     <span>Capitola, CA 95010</span>
                 </div>
             </xpath>
+
             <xpath expr="//div[@id='informations']" position="before">
+<!--            Custom Method returns list with single item, so need to use [0], couldn't find how to change that within method-->
+                <t t-set="billing_contact" t-value="o.get_billing_address()[0]"/>
                 <div>
-                    <t t-if="o.commercial_partner_id.name">
-                      <span t-esc="o.commercial_partner_id.name"/><br />
+                    <t t-if="billing_contact.name">
+                      <span t-esc="billing_contact.name"/><br />
                     </t>
-                    <t t-if="o.commercial_partner_id.street">
-                        <span t-esc="o.commercial_partner_id.street"/><br />
+                    <t t-if="billing_contact.street">
+                        <span t-esc="billing_contact.street"/><br />
                     </t>
-                    <t t-if="o.commercial_partner_id.street2">
+                    <t t-if="billing_contact.street2">
                         <span t-esc="o.commercial_partner_id.street2"/><br />
                     </t>
-                    <t t-if="o.commercial_partner_id.city">
-                        <span t-esc="o.commercial_partner_id.city"/>,
+                    <t t-if="billing_contact.city">
+                        <span t-esc="billing_contact.city"/>,
                     </t>
-                    <t t-if="o.commercial_partner_id.state_id.name">
-                        <span t-esc="o.commercial_partner_id.state_id.name"/>,
+                    <t t-if="billing_contact.state_id.name">
+                        <span t-esc="billing_contact.state_id.name"/>,
                     </t>
-                    <t t-if="o.commercial_partner_id.zip">
-                        <span t-esc="o.commercial_partner_id.zip"/><br />
+                    <t t-if="billing_contact.zip">
+                        <span t-esc="billing_contact.zip"/><br />
                     </t>
                 </div>
             </xpath>
         </template>
-
-
     </data>
 </odoo>
