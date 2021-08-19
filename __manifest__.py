@@ -30,6 +30,8 @@
         'reports/custom_report_address.xml',
         'reports/modified_invoice_report.xml',
         'views/field_service_location_form.xml',
-        'views/field_service_worker_form.xml'
+        'views/field_service_worker_form.xml',
+        'views/product_template_product_form.xml',
+        'views/custom_css_loader.xml'
     ],
 }
