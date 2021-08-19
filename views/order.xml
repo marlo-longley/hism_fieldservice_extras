@@ -6,8 +6,21 @@
 			<field name="model">fsm.order</field>
 			<field name="inherit_id" ref="fieldservice.fsm_order_form"/>
 			<field name="arch" type="xml">
+<!--			Change label for description text area-->
+				<xpath expr='//group[@name="description_grp"]' position="replace">
+					<group string="Description of Service (will show in next service notes)" name="description_grp">
+                        <field name="description" nolabel="1"/>
+                    </group>
+				</xpath>
+<!--			Remove "resolution" text area and replace with "Additional Maintenence Tasks"-->
+				<xpath expr='//group[@name="resolution_grp"]' position="replace">
+					<group string="Additional Maintenance Tasks" name="additional_tasks_grp">
+                        <field name="additional_tasks" nolabel="1"/>
+                    </group>
+				</xpath>
+<!--			Add water tests and replace tab name with Water Tests-->
 				<xpath expr="//notebook/page[2]" position="replace">
-					<page string="Tasks" name="Tasks">
+					<page string="Water Tests" name="Water Tests">
 						<field name="order_activity_ids" nolabel="1">
 							<tree editable="bottom">
 								<field name="sequence" widget="handle"/>

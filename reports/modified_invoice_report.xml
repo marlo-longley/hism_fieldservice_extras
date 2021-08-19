@@ -3,13 +3,6 @@
 <!-- This modifies the standard invoice layout -->
     <data>
 
-        <template id="custom_service_order_report_styles" inherit_id="web.report_assets_common">
-            <xpath expr="." position="inside">
-                <link href="/hism_fieldservice_extras/static/css/custom_report.css" rel="stylesheet" type="text/scss"/>
-            </xpath>
-        </template>
-
-
         <template id="modified_invoice_report" inherit_id="account.report_invoice_document">
             <xpath expr="//div[@class='page']/p[1]" position="replace">
                 <div>

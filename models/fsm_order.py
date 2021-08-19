@@ -7,6 +7,11 @@ class HISMFieldserviceOrder(models.Model):
     # Get the list of tasks performed on this order
     order_activity_ids = fields.One2many('fsm.activity', 'fsm_order_id',
                                          'Activitiy IDs')
+
+    # Optional field to store additional maintenance tasks.
+    additional_tasks = fields.Char(type='Text')
+
+
     # Called from custom service order report
     def get_activity_data(self):
         if self.order_activity_ids:
@@ -79,7 +84,7 @@ class HISMFieldserviceOrder(models.Model):
     # Create fields for info on the most recent service order for this location
     last_service_order_id = fields.Char(compute='_compute_last_service_order', string='Last Order ID', type='Char')
     last_service_order_name = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
-    last_service_order_date = fields.Date(compute='_compute_last_service_order', string='Last Order Name', type='Char')
+    last_service_order_date = fields.Date(compute='_compute_last_service_order', string='Last Order Date', type='Char')
     last_service_order_description = fields.Char(compute='_compute_last_service_order', string='Last Order Name', type='Char')
 
     # Called from the report view
@@ -115,5 +120,5 @@ class HISMFieldserviceOrder(models.Model):
     @api.multi
     def get_sibling_contacts(self):
         owner_id = self.location_id.owner_id.id
-        related_contacts = self.env['res.partner'].search([('parent_id', '=', owner_id)])
+        related_contacts = self.env['res.partner'].search(["|",('parent_id', '=', owner_id), ('id', '=', owner_id)])
         return related_contacts

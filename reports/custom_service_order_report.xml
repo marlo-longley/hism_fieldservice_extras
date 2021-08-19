@@ -40,7 +40,7 @@
                 <!-- All content must be put inside "page" class div-->
                 <div class="page">
                     <div class="row">
-                        <!-- Left column-->
+                        <!-- Header-->
                         <div class="col-6">
                             <span class="large-font"><b>AWS WORK ORDER</b></span>&#160;
                         </div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <strong>Client Location:</strong><br/>
+                            <strong>Location Address:</strong><br/>
                             <t t-if="doc.site_name">
                               <span t-esc="doc.site_name"/><br />
                             </t>
@@ -72,7 +72,7 @@
                             </t>
                         </div>
                         <div class="col-4">
-                            <p><b>Billing if different:</b></p>
+                            <strong>Customer Invoice Address (if different):</strong><br/>
                             <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
                                 <t t-foreach="related_contacts.filtered(lambda r: r.type == 'invoice')" t-as="obj" >
                                     <t t-if="obj.name">
@@ -105,40 +105,35 @@
                     <hr/>
 
                 <!-- Contact methods-->
-                    <strong>Contact Info:</strong><br />
-                    <ul>
+                    <strong>Contact Methods:</strong><br />
+                    <ul class="list-inline">
                         <!-- Call model method to get sibling contacts (entries that share the same owner id) -->
-                        <!-- Only load contacts with data in the phone, email, or mobile fields -->
                         <t t-set="related_contacts" t-value="doc.get_sibling_contacts()"/>
-                        <t t-foreach="related_contacts.filtered(lambda r: r.phone != False)" t-as="obj" >
-                            <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.phone"/></li>
-                        </t>
-                        <t t-foreach="related_contacts.filtered(lambda r: r.mobile != False)" t-as="obj" >
-                            <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.mobile"/></li>
-                        </t>
-                        <t t-foreach="related_contacts.filtered(lambda r: r.email != False)" t-as="obj" >
-                            <li><strong><span t-field="obj.name"/>:&#160;</strong><span t-field="obj.email"/></li>
+                        <t t-foreach="related_contacts" t-as="obj">
+                            <!-- Set name var, could be either .name or .display_name-->
+                            <t t-if="obj.name">
+                                <t t-set="name" t-value="obj.name"/>
+                            </t>
+                            <t t-else="obj.display_name">
+                                <t t-set="name" t-value="obj.display_name"/>
+                            </t>
+                            <!-- Only load contacts with data in the phone, email, or mobile fields -->
+                            <t t-if="obj.phone is not False">
+                                <li class="list-inline-item"><strong><span t-esc="name"/><br/></strong><span t-field="obj.phone"/></li>
+                            </t>
+                            <t t-if="obj.mobile is not False">
+                                <li class="list-inline-item"><strong><span t-esc="name"/><br/></strong><span t-field="obj.mobile"/></li>
+                            </t>
+                            <t t-if="obj.email is not False">
+                                <li class="list-inline-item"><strong><span t-esc="name"/><br/></strong><span t-field="obj.email"/></li>
+                            </t>
                         </t>
                     </ul>
-
-                    <!-- Last Service Date and notes -->
-<!--                    <div>-->
-<!--                        <strong>Last Service Date (Scheduled Start Date): &#160;</strong>-->
-<!--                        <span t-if="doc.last_service_order_id">-->
-<!--                            <span t-esc="doc.last_service_order_date.strftime('%m/%d/%Y')"/>-->
-<!--                        </span>-->
-<!--                        <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>-->
-<!--                    </div>-->
-
-<!--                    &lt;!&ndash; Last Service Notes with completed tasks &ndash;&gt;-->
-<!--                    <div t-if="doc.last_service_order_id">-->
-<!--                        <t t-esc="doc.last_service_order_description"/>-->
-<!--                    </div>-->
-
                     <hr/>
+
                     <div class="row">
                         <div class="col-6 empty">
-                            <strong>Previous Service Notes</strong><br />
+                            <strong>Previous Description of Service</strong><br />
                             <div>
                             Date (Scheduled Start Date):
                             <span t-if="doc.last_service_order_id">
@@ -149,15 +144,14 @@
                             </span>
                             <span t-else="doc.last_service_order_id">No prior service orders in the system.</span>
                     </div>
-                        </div>
+                    </div>
                         <div class="col-6 empty">
-                            <strong>Service Notes (will display on next service)</strong><br />
+                            <strong>Description of Service (will display on next service)</strong><br />
                             <span t-if="doc.description">
                                 <span t-esc="doc.description"/>
                             </span>
                         </div>
                     </div>
-
                     <!-- Table with water tests with space for written results -->
 <!--                    <div t-if="doc.order_activity_ids" id="activities">-->
 <!--                        <t t-set="activity_data" t-value="doc.get_activity_data()"/>-->
@@ -230,7 +224,14 @@
                             </tbody>
                         </table>
                     </div>
-
+                     <div class="row">
+                        <div class="empty-short">
+                            <strong>Additional Maintenance Tasks</strong><br />
+                            <span t-if="doc.additional_tasks">
+                                <span t-esc="doc.additional_tasks"/>
+                            </span>
+                        </div>
+                    </div>
                     <div class="row"><strong>Parts Used / Cost Breakdown</strong></div>
                       <div class="row">
                         <table class="table table-bordered">
@@ -245,6 +246,54 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                    <td>&#160;</td>
+                                </tr>
                                 <tr>
                                     <td>&#160;</td>
                                     <td>&#160;</td>

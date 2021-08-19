@@ -1,3 +1,8 @@
+
+.page {
+    font-size: 12px;
+}
+
 .order-info {
     padding-top: 5px;
 }
@@ -7,7 +12,11 @@
 }
 
 .empty {
-    min-height: 250px;
+    min-height: 200px;
+}
+
+.empty-short {
+    min-height: 125px;
 }
 
 hr {
@@ -17,23 +26,19 @@ hr {
 .table {
     margin-bottom: 0;
 }
-.table th {
-    padding: 0 0 0 5px;
-}
 
 .table.tests {
     margin-bottom: 30px;
 }
 
-.table.tests tbody tr {
-    height: 35px;
+.table th, .table td {
+    padding: 0;
 }
 
-.table.tests tbody tr {
-    min-height: 100px;
-}
-.table.tests tbody td {
-    min-height: 100px;
+
+.table tbody tr {
+    height: 30px;
+    min-height: 30px;
 }
 
 .large-font {
